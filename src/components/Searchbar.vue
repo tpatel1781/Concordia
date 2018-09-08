@@ -22,35 +22,20 @@ export default {
                         var songs
                         axios({ method: "GET", url: "http://localhost:3000/search/"+input }).then(
                              result => {
-                              console.log(result.data);
-                               this.songs = result.data;
-                               console.log(songs);
+                                this.songs = [];
+                                for(var track of result.data) {
+                                    this.songs.push(track.name);
+                                }
                              },
                             error => {
                                  console.error(error);
                             }
-                        )
-                          console.log(songs);
-                        
-                        return songs;
-                        },
+                        )},
         myFunc: function(input) {
             return input;
         }
             },
   
-  mounted() {
-    axios({ method: "GET", url: "http://localhost:3000/search/rockstar" }).then(
-      result => {
-          console.log(result);
-        this.songs = result.data;
-        console.log(this.songs);
-      },
-      error => {
-        console.error(error);
-      }
-    );
-  }
 };
 </script>
 

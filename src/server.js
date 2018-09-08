@@ -12,6 +12,21 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: 'localhost:3000'
 });
 
+// Retrieve
+var MongoClient = require('mongodb').MongoClient;
+var db = null;
+
+// Connect to the db
+MongoClient.connect("mongodb://localhost:27017/", function(err, client) {
+  if(err) {
+    console.log(err);
+  }
+  db = client.db('Songs');
+});
+
+
+
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -35,12 +50,17 @@ app.get('/search/:song', function (req, res) {
     spotifyApi.searchTracks(req.params.song).then(function (data) {
         var songs = [];
         for (var track of data.body.tracks.items) {
-            songs.push(track.name);
+            songs.push(track);
         }
         res.send(songs);
     }, function (err) {
         res.send(err);
     });
+});
+
+app.get('/add/:song', function(req, res) {
+    if()
+
 });
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
