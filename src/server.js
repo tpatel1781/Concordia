@@ -79,7 +79,7 @@ app.post('/add', urlencodedParser, function (req, res) {
     spotifyApi.getTrack(req.body.spotifyId).then(function (data) {
         console.log(data.body.name);
         songName = data.body.name;
-        spotifyUrlHref = data.body.href;
+        spotifyUrlHref = data.body.external_urls.spotify;
         db.collection("songs").insertOne({
             _id: req.body.spotifyId,
             name: songName,
