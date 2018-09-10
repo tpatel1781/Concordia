@@ -1,8 +1,7 @@
 <template>
     <div>
         <form>
-            <input type="text" v-model="message" v-on:input="autocomplete(message)">
-            <input id="searchbar" type="submit" value="Search">
+            <input type="text" placeholder="Search" v-model="message" v-on:input="autocomplete(message)">
             <div class="songs">
               <template v-for="song in songs">
                 <p class="song"> {{ song.name + ", " + song.artists[0].name }}</p>
@@ -45,18 +44,48 @@ export default {
 </script>
 
 <style>
+  @font-face {
+    font-family: productSansRegular;
+    src: url(productSansRegular.ttf);
+  }
+  @font-face {
+    font-family: productSansBold;
+    src: url(productSansBold.ttf);
+    font-weight: bold;
+  }
+  body {
+    background-color: #1D2127;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  input {
+    background-color: #1D2127;
+    color: white;
+    font-family: 'productSansBold';
+    font-size: 48px;
+    opacity: 0.75;
+    border: none;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    margin-top: 12%;
+  }
+
+  *:focus {
+    outline: none;
+  }
   .song {
-	padding-left: 26px;
-	border-radius: 8px;
-	margin-bottom: 10px;
-	margin-right: 94px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	transition-duration: 200ms;
-}
+    color: white;
+    font-family: 'productSansRegular';
+    transition-duration: 300ms;
+    font-size: 24px;
+  }
   .song:hover {
-	-webkit-transform: scale(1.05);
-	-ms-transform: scale(1.05);
-	transform: scale(1.05);
-	transition-duration: 200ms;
-}
+    color:springgreen;
+    -webkit-transform: scale(1.05);
+	  -ms-transform: scale(1.05);
+	  transform: scale(1.05);
+    transition-duration: 300ms;
+  }
 </style>
