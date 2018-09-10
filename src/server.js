@@ -61,7 +61,7 @@ app.get('/search/:song', function (req, res) {
     }, function (err) {
         console.log('Something went wrong when retrieving an access token', err.message);
     });
-    spotifyApi.searchTracks(req.params.song).then(function (data) {
+    spotifyApi.searchTracks(req.params.song, {limit: 10}).then(function (data) {
         var songs = [];
         for (var track of data.body.tracks.items) {
             songs.push(track);
@@ -74,16 +74,19 @@ app.get('/search/:song', function (req, res) {
 
 app.post('/add', urlencodedParser, function (req, res) {
     var songName;
+    var imgUrl;
     var spotifyUrlHref;
     console.log(req.body.spotifyId);
     spotifyApi.getTrack(req.body.spotifyId).then(function (data) {
         console.log(data.body.name);
         songName = data.body.name;
+        imgUrl = data.body.images[0].url;
         spotifyUrlHref = data.body.external_urls.spotify;
         db.collection("songs").insertOne({
             _id: req.body.spotifyId,
             name: songName,
             spotifyUrl: spotifyUrlHref,
+            image: imgUrl,
             similarSongs: []
         }, function (err, result) {
             if (err) {
