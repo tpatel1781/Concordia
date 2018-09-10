@@ -6,11 +6,13 @@
         <template v-for="similarSong in similarSongs"> 
             <p> {{ similarSong }} </p>
         </template>
+        <p> HGHGHGHHGH </p>
     </div>
 </template>
 
 <script>
 import axios from "axios";
+console.log(this.name);
 export default {
   props: ["name"],
   data() {
@@ -23,6 +25,17 @@ export default {
   },
   components: {},
   mounted() {
+    axios({
+      method: "POST",
+      url: "http://localhost:3000/add/",
+      data: {
+          spotifyId: this.name
+      }
+    }).then(
+      error => {
+        console.error(error);
+      }
+    );
     axios({
       method: "GET",
       url: "http://localhost:3000/song/" + this.name

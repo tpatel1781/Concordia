@@ -73,23 +73,36 @@ app.get('/search/:song', function (req, res) {
 });
 
 app.post('/add', urlencodedParser, function (req, res) {
-    db.collection("songs").insertOne({
-        _id: req.body.spotifyId,
-        name: req.body.name,
-        spotifyUrl: req.body.spotifyUrl,
-        similarSongs: req.body.similarSongs
-    }, function (err, result) {
-        if (err) {
-            console.log(req.body.name + " already exists");
-            res.send(req.body.name + " already exists")
-        } else {
-            console.log("Added " + req.body.name + " to songs");
-            res.send("Added " + req.body.name + " to songs")
-        }
+    var songName;
+    var spotifyUrlHref;
+    console.log(req.body.spotifyId);
+    spotifyApi.getTrack(req.body.spotifyId).then(function (data) {
+        console.log(data.body.name);
+        songName = data.body.name;
+        spotifyUrlHref = data.body.href;
+        db.collection("songs").insertOne({
+            _id: req.body.spotifyId,
+            name: songName,
+            spotifyUrl: spotifyUrlHref,
+            similarSongs: []
+        }, function (err, result) {
+            if (err) {
+                console.log(songName + " already exists");
+                res.send(songName + " already exists")
+            } else {
+                console.log("Added " + songName + " to songs");
+                res.send("Added " + songName + " to songs")
+            }
+        });
+    }, function (err) {
+        console.log(err);
     });
+    console.log(songName);
+   
 });
 
 app.get('/song/:songId', function(req, res) {
+    console.log("accessed at "+ req.params.songId);
     db.collection("songs").findOne({ _id: req.params.songId }, function(err, result) {
         if(err) { 
             console.log(err)
