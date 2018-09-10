@@ -3,7 +3,11 @@
         <form>
             <input type="text" v-model="message" v-on:input="autocomplete(message)">
             <input id="searchbar" type="submit" value="Search">
-            <p>{{ songs }}</p>
+            <div class="songs">
+              <template v-for="song in songs">
+                <p class="song"> {{ song.name + ", " + song.artists[0].name }}</p>
+              </template>
+            </div>
         </form> 
     </div>
 </template>
@@ -28,7 +32,7 @@ export default {
         result => {
           this.songs = [];
           for (var track of result.data) {
-            this.songs.push(track.name);
+            this.songs.push(track);
           }
         },
         error => {
@@ -41,4 +45,18 @@ export default {
 </script>
 
 <style>
+  .song {
+	padding-left: 26px;
+	border-radius: 8px;
+	margin-bottom: 10px;
+	margin-right: 94px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	transition-duration: 200ms;
+}
+  .song:hover {
+	-webkit-transform: scale(1.05);
+	-ms-transform: scale(1.05);
+	transform: scale(1.05);
+	transition-duration: 200ms;
+}
 </style>
