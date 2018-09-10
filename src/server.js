@@ -76,18 +76,21 @@ app.post('/add', urlencodedParser, function (req, res) {
     var songName;
     var imgUrl;
     var spotifyUrlHref;
+    var artists;
     console.log(req.body.spotifyId);
     spotifyApi.getTrack(req.body.spotifyId).then(function (data) {
-        console.log(data.body.album.images[0].url);
+        console.log(data.body.artists);
         songName = data.body.name;
         imgUrl = data.body.album.images[0].url;
         spotifyUrlHref = data.body.external_urls.spotify;
+        artists = data.body.artists;
         db.collection("songs").insertOne({
             _id: req.body.spotifyId,
             name: songName,
             spotifyUrl: spotifyUrlHref,
             image: imgUrl,
-            similarSongs: []
+            similarSongs: [],
+            artists: artists
         }, function (err, result) {
             if (err) {
                 console.log(songName + " already exists");
