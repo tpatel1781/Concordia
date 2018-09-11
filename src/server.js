@@ -77,20 +77,23 @@ app.post('/add', urlencodedParser, function (req, res) {
     var imgUrl;
     var spotifyUrlHref;
     var artists;
+    var albumName;
     console.log(req.body.spotifyId);
     spotifyApi.getTrack(req.body.spotifyId).then(function (data) {
-        console.log(data.body.artists);
+        console.log(data.body.album.name);
         songName = data.body.name;
         imgUrl = data.body.album.images[0].url;
         spotifyUrlHref = data.body.external_urls.spotify;
         artists = data.body.artists;
+        albumName = data.body.album.name;
         db.collection("songs").insertOne({
             _id: req.body.spotifyId,
             name: songName,
             spotifyUrl: spotifyUrlHref,
             image: imgUrl,
             similarSongs: [],
-            artists: artists
+            artists: artists,
+            album: albumName
         }, function (err, result) {
             if (err) {
                 console.log(songName + " already exists");
@@ -116,6 +119,11 @@ app.get('/song/:songId', function(req, res) {
             res.send(result);
         }
     });
+});
+
+app.post('/addSimilarSong', function(req, res) {
+    db.collection("songs")
+
 });
 
 app.listen(3000, () => console.log('server listening on port 3000!'))
