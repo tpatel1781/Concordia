@@ -61,7 +61,7 @@ export default {
 }
 body {
   background-color: #1d2127;
-  width: 75%;
+  width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -69,13 +69,16 @@ input {
   background-color: #1d2127;
   color: white;
   font-family: "productSansBold";
-  font-size: 48px;
+  font-size: 64px;
   opacity: 0.75;
   border: none;
   display: block;
   margin: 0 auto;
   width: 100%;
-  margin-top: 12%;
+  margin-top: 125px;
+}
+a {
+  text-decoration: none;
 }
 
 *:focus {
@@ -85,13 +88,16 @@ input {
   color: white;
   font-family: "productSansRegular";
   transition-duration: 300ms;
-  font-size: 24px;
+  font-size: 32px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .song:hover {
   color: springgreen;
   -webkit-transform: scale(1.05);
   -ms-transform: scale(1.05);
   transform: scale(1.05);
+  text-shadow: 2px 2px 4px #000000;
   transition-duration: 300ms;
 }
 </style>
