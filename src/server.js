@@ -140,7 +140,33 @@ app.post('/addSimilarSong', function(req, res) {
     }, function (err) {
         console.log('Something went wrong when retrieving an access token', err.message);
     });
-    
+    spotifyApi.getTrack(req.body.spotifyId).then(function (data) {
+        console.log(data.body.album.name);
+        songName = data.body.name;
+        imgUrl = data.body.album.images[0].url;
+        spotifyUrlHref = data.body.external_urls.spotify;
+        artists = data.body.artists;
+        albumName = data.body.album.name;
+        db.collection("songs").insertOne({
+            _id: req.body.spotifyId,
+            name: songName,
+            spotifyUrl: spotifyUrlHref,
+            image: imgUrl,
+            similarSongs: [],
+            artists: artists,
+            album: albumName
+        }, function (err, result) {
+            if (err) {
+                console.log(songName + " already exists");
+                res.send(songName + " already exists")
+            } else {
+                console.log("Added " + songName + " to songs");
+                res.send("Added " + songName + " to songs")
+            }
+        });
+    }, function (err) {
+        console.log(err);
+    });
 
 });
 
