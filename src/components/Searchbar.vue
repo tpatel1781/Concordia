@@ -21,6 +21,7 @@ import VueRouter from "vue-router";
 import SongPage from "./SongPage";
 
 export default {
+  name: "Searchbar",
   data() {
     return {
       message: "",

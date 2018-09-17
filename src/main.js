@@ -3,13 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './Router'
+import VModal from 'vue-js-modal'
 
 Vue.config.productionTip = false
+
+Vue.use(VModal)
 
 /* eslint-disable no-new */
 new Vue({
   router,
   el: '#app',
   template: '<App/>',
-  components: { App }
+  components: { App, }
 })

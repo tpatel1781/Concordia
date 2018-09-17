@@ -2,18 +2,22 @@
     <div id="header">
       <img v-bind:src="albumArt" />
       <div id="info">
+        <Searchbar />
+        <modal name="hello-world"></modal>
         <h1> {{ songName }} </h1>
         <h2> {{ artist }}, {{ albumName }} </h2>
-        <a v-bind:href= "spotifyUrl" class="button">Open in Spotify</a>
+        <a v-bind:href= "spotifyUrl" class="button" id="spotify">Open in Spotify</a>
+        <button v-bind:href= "spotifyUrl" class="button" id="suggest" v-on:click="show">Suggest Song</button>
       </div>
       <template v-for="similarSong in similarSongs"> 
-          <p> {{ similarSong }} </p>
+          <SimilarSong v-bind:name="similarSong.songName" v-bind:albumName="similarSong.albumName" v-bind:spotifyUrl="similarSong.spotifyUrlHref" v-bind:artist="similarSong.artists"/>
       </template>
     </div>
 </template>
 
 <script>
 import axios from "axios";
+import Searchbar from './Searchbar'
 console.log(this.name);
 export default {
   props: ["name"],
@@ -28,7 +32,9 @@ export default {
       albumName: ""
     };
   },
-  components: {},
+  components: {
+    Searchbar
+  },
   mounted() {
     axios({
       method: "POST",
@@ -58,6 +64,14 @@ export default {
         console.error(error);
       }
     );
+  },
+  methods: {
+    show () {
+      this.$modal.show('hello-world');
+    },
+    hide () {
+      this.$modal.hide('hello-world');
+    }
   }
 };
 </script>
@@ -79,6 +93,7 @@ export default {
     display: inline-block;
     vertical-align: top;
     margin-left: 50px;
+    max-width: 69.55%;
   }
   h1 {
     font-size: 64px;
@@ -95,12 +110,24 @@ export default {
   }
   .button {
     text-decoration: none;
-    color: springgreen;
     font-family: 'productSansRegular';
-    background-color: #1d2127;
-    border: 2px solid springgreen;
-    border-radius: 8px;
+    border-radius: 40px;
     padding: 10px 24px;
+    background-color: #1d2127;
+    border: 2px solid;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+  .button:hover {
+
+  }
+  #spotify {
+    color: #00B472;
+    border-color: #00B472;
+  }
+  #suggest {
+    color: #AF4544;
+    border-color: #AF4544;
   }
   @font-face {
     font-family: productSansRegular;
