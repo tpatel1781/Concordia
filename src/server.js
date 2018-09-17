@@ -61,7 +61,7 @@ app.get('/search/:song', function (req, res) {
     }, function (err) {
         console.log('Something went wrong when retrieving an access token', err.message);
     });
-    spotifyApi.searchTracks(req.params.song, {limit: 10}).then(function (data) {
+    spotifyApi.searchTracks(req.params.song, { limit: 10 }).then(function (data) {
         var songs = [];
         for (var track of data.body.tracks.items) {
             songs.push(track);
@@ -116,13 +116,13 @@ app.post('/add', urlencodedParser, function (req, res) {
         console.log(err);
     });
     console.log(songName);
-   
+
 });
 
-app.get('/song/:songId', function(req, res) {
-    console.log("accessed at "+ req.params.songId);
-    db.collection("songs").findOne({ _id: req.params.songId }, function(err, result) {
-        if(err) { 
+app.get('/song/:songId', function (req, res) {
+    console.log("accessed at " + req.params.songId);
+    db.collection("songs").findOne({ _id: req.params.songId }, function (err, result) {
+        if (err) {
             console.log(err)
         } else {
             res.send(result);
@@ -130,44 +130,54 @@ app.get('/song/:songId', function(req, res) {
     });
 });
 
-app.post('/addSimilarSong', function(req, res) {
+app.post('/addSimilarSong', function (req, res) {
+    var songName;
+    var imgUrl;
+    var spotifyUrlHref;
+    var artists;
+    var albumName;
+    var similarSongList;
+    console.log(req.body.songToAddId);
+    console.log(req.body.songToBeAddedToId);
     spotifyApi.clientCredentialsGrant().then(function (data) {
         console.log('The access token expires in ' + data.body['expires_in']);
         console.log('The access token is ' + data.body['access_token']);
 
         // Save the access token so that it's used in future calls
         spotifyApi.setAccessToken(data.body['access_token']);
+        spotifyApi.getTrack(req.body.songToAddId).then(function (data) {
+            songName = data.body.name;
+            spotifyUrlHref = data.body.external_urls.spotify;
+            artists = data.body.artists;
+            albumName = data.body.album.name;
+            similarSong = {
+                songName: songName,
+                spotifyUrlHref: spotifyUrlHref,
+                artists: artists,
+                albumName: albumName
+            }
+            db.collection("songs").updateOne(
+                { _id: req.body.songToBeAddedToId },
+                { $push: { similarSongs: similarSong }}, function (err, result) {
+                    if (err) {
+                        console.log(err);  
+                    } else {
+                        console.log("Added " + songName);
+                    }
+                }, function (err, result) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    
+                });
+        }, function (err) {
+            console.log(err);
+        });
     }, function (err) {
         console.log('Something went wrong when retrieving an access token', err.message);
     });
-    spotifyApi.getTrack(req.body.spotifyId).then(function (data) {
-        console.log(data.body.album.name);
-        songName = data.body.name;
-        imgUrl = data.body.album.images[0].url;
-        spotifyUrlHref = data.body.external_urls.spotify;
-        artists = data.body.artists;
-        albumName = data.body.album.name;
-        db.collection("songs").insertOne({
-            _id: req.body.spotifyId,
-            name: songName,
-            spotifyUrl: spotifyUrlHref,
-            image: imgUrl,
-            similarSongs: [],
-            artists: artists,
-            album: albumName
-        }, function (err, result) {
-            if (err) {
-                console.log(songName + " already exists");
-                res.send(songName + " already exists")
-            } else {
-                console.log("Added " + songName + " to songs");
-                res.send("Added " + songName + " to songs")
-            }
-        });
-    }, function (err) {
-        console.log(err);
-    });
-
+    
+    res.send("hello");
 });
 
 app.listen(3000, () => console.log('server listening on port 3000!'))
