@@ -115,19 +115,35 @@ export default {
     padding: 10px 24px;
     background-color: #1d2127;
     border: 2px solid;
-    margin-right: 10px;
+    margin-right: 16px;
     font-size: 16px;
-  }
-  .button:hover {
-
+    transition-duration: 300ms;
   }
   #spotify {
     color: #00B472;
     border-color: #00B472;
   }
+  #spotify:hover {
+    background-color: #00B472;
+    color: #1d2127;
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+    box-shadow: 2px 2px 4px #000000;
+    transition-duration: 300ms;
+  }
   #suggest {
     color: #AF4544;
     border-color: #AF4544;
+  }
+  #suggest:hover {
+    background-color: #AF4544;
+    color: #1d2127;
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+    box-shadow: 0px 2px 6px #000000;
+    transition-duration: 300ms;
   }
   @font-face {
     font-family: productSansRegular;
