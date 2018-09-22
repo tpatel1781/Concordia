@@ -2,8 +2,6 @@
     <div id="header">
       <img v-bind:src="albumArt" />
       <div id="info">
-        <Searchbar />
-        <modal name="hello-world"></modal>
         <h1> {{ songName }} </h1>
         <h2> {{ artist }}, {{ albumName }} </h2>
         <a v-bind:href= "spotifyUrl" class="button" id="spotify">Open in Spotify</a>
@@ -33,7 +31,6 @@ export default {
     };
   },
   components: {
-    Searchbar
   },
   mounted() {
     axios({
@@ -66,14 +63,8 @@ export default {
     );
   },
   methods: {
-    show () {
-      this.$modal.show('hello-world');
-    },
-    hide () {
-      this.$modal.hide('hello-world');
-    }
-  }
-};
+}
+}
 </script>
 
 <style>
@@ -83,17 +74,19 @@ export default {
     margin-right: auto;
     color: white;
     font-family: 'productSansRegular';
+    width: 50%;
     margin-top: 125px;
+    min-width: 800px;
   }
   #header {
-    width: 50%;
-    margin: auto;
+    display: flex;
   }
   #info {
     display: inline-block;
     vertical-align: top;
+    max-width: 100%;
     margin-left: 50px;
-    max-width: 69.55%;
+    word-wrap: break-word;
   }
   h1 {
     font-size: 64px;
@@ -126,10 +119,7 @@ export default {
   #spotify:hover {
     background-color: #00B472;
     color: #1d2127;
-    -webkit-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    transform: scale(1.1);
-    box-shadow: 2px 2px 4px #000000;
+    box-shadow: 0px 0px 4px #000000;
     transition-duration: 300ms;
   }
   #suggest {
@@ -139,10 +129,7 @@ export default {
   #suggest:hover {
     background-color: #AF4544;
     color: #1d2127;
-    -webkit-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    transform: scale(1.1);
-    box-shadow: 0px 2px 6px #000000;
+    box-shadow: 0px 0px 6px #000000;
     transition-duration: 300ms;
   }
   @font-face {
