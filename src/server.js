@@ -100,7 +100,7 @@ app.post('/add', urlencodedParser, function (req, res) {
             name: songName,
             spotifyUrl: spotifyUrlHref,
             image: imgUrl,
-            similarSongs: [],
+            similarSongs: {},
             artists: artists,
             album: albumName
         }, function (err, result) {
@@ -116,11 +116,10 @@ app.post('/add', urlencodedParser, function (req, res) {
         console.log(err);
     });
     console.log(songName);
-
 });
 
 app.get('/song/:songId', function (req, res) {
-    console.log("accessed at " + req.params.songId);
+    console.log("accessed " + req.params.songId);
     db.collection("songs").findOne({ _id: req.params.songId }, function (err, result) {
         if (err) {
             console.log(err)
@@ -137,6 +136,7 @@ app.post('/addSimilarSong', function (req, res) {
     var artists;
     var albumName;
     var similarSongList;
+    var songId;
     console.log(req.body.songToAddId);
     console.log(req.body.songToBeAddedToId);
     spotifyApi.clientCredentialsGrant().then(function (data) {
@@ -150,25 +150,31 @@ app.post('/addSimilarSong', function (req, res) {
             spotifyUrlHref = data.body.external_urls.spotify;
             artists = data.body.artists;
             albumName = data.body.album.name;
+            songId = req.body.songToAddId;
             similarSong = {
+                songId: songId,
                 songName: songName,
                 spotifyUrlHref: spotifyUrlHref,
                 artists: artists,
-                albumName: albumName
+                albumName: albumName,
+                numUpvotes: 0
             }
+            var nameOfLocation = "similarSongs."+songId;
+            var query = {};
+            query[nameOfLocation] = similarSong;
             db.collection("songs").updateOne(
                 { _id: req.body.songToBeAddedToId },
-                { $push: { similarSongs: similarSong }}, function (err, result) {
+                { $set: query }, function (err, result) {
                     if (err) {
-                        console.log(err);  
+                        console.log(err);
                     } else {
                         console.log("Added " + songName);
                     }
                 }, function (err, result) {
-                    if(err) {
+                    if (err) {
                         console.log(err);
                     }
-                    
+
                 });
         }, function (err) {
             console.log(err);
@@ -176,8 +182,25 @@ app.post('/addSimilarSong', function (req, res) {
     }, function (err) {
         console.log('Something went wrong when retrieving an access token', err.message);
     });
-    
+
     res.send("hello");
+});
+
+app.post('/upvote', function (req, res) {
+    var nameOfLocation = "similarSongs."+req.body.songToAddUpvoteId+".numUpvotes";
+    var query = {};
+    query[nameOfLocation] = 1;
+    db.collection("songs").updateOne(
+        { _id: req.body.songToBeUpdated },
+        { $inc: query }, function (err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("upvoted " + req.body.songToBeUpdated);
+                res.send("upvoted " + req.body.songToBeUpdated)
+            }
+        });
+   
 });
 
 app.listen(3000, () => console.log('server listening on port 3000!'))

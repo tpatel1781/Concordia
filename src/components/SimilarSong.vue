@@ -4,12 +4,13 @@
       <p> {{albumName}} </p>
       <p> {{spotifyUrl}} </p>
       <p> {{artist}} </p>
+      <p> {{numUpvotes}} </p>
     </div>
 </template>
 
 <script>
 export default {
-  props: ["name", "albumName", "spotifyUrl", "artist"],
+  props: ["songId", "name", "albumName", "spotifyUrl", "artist", "numUpvotes"],
 };
 </script>
 
